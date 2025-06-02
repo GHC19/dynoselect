@@ -5,7 +5,8 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from itertools import chain
 import reflex as rx
-
+from aplicacion.styles import Size
+from aplicacion.fonts import Font, FontWeight
 from reflex.components.radix.themes.typography.base import LiteralTextWeight
 from reflex.components.radix.themes.base import LiteralRadius
 from reflex.components.radix.themes.components.text_field import LiteralTextFieldSize
@@ -89,9 +90,12 @@ class Dynoselect(rx.ComponentState):
     @classmethod
     def btntext(cls, child, icon: str, **props) -> rx.Component:
         """Create a button text with a globe icon and placeholder text."""
-        comps = [rx.text(child, **props)] if isinstance(child, str) else [child]
-        comps = [rx.icon(icon, size=cls._icon_size, **props)] + comps if icon else comps
-        return rx.flex(*comps, direction="row", spacing="2", align="center")
+        comps = [rx.text(child, font_family = Font.BODY.value,
+                        font_weight = FontWeight.MEDIUMLIGHT.value)] if isinstance(child, str) else [child]
+        comps = [rx.icon(icon, size=cls._icon_size, font_family = Font.BODY.value,
+                        font_weight = FontWeight.MEDIUMLIGHT.value, **props)] + comps if icon else comps
+        return rx.flex(*comps, direction="row", font_family = Font.BODY.value,
+                        font_weight = FontWeight.MEDIUMLIGHT.value, spacing="2", align="center")
 
     @classmethod
     def get_component(
@@ -123,8 +127,9 @@ class Dynoselect(rx.ComponentState):
             btn = rx.button(
                 child, display="inline", variant="solid", size=size,
                 style={
+                    "width": "100%",
                     ":not(:hover)":{"background": "transparent"},
-                    f":not(:hover) > {child.as_}":{"color": rx.color("gray", 12)}
+                    f":not(:hover) > {child.as_}":{"color": rx.color("black", 12)}
                 },
                 **props
             )
@@ -148,7 +153,11 @@ class Dynoselect(rx.ComponentState):
                     align=align,
                     size=size, 
                     weight=weight, 
-                    class_name=f"p{indent_direction[align]}-{indent} w-full"
+                    class_name=f"p{indent_direction[align]}-{indent} w-full",
+                    style={"width": "100%", "color": rx.color_mode_cond(
+                    light="black",
+                    dark="white"
+                )}
                 ),
                 idx, 
                 radius=radius,
@@ -161,7 +170,7 @@ class Dynoselect(rx.ComponentState):
             return rx.cond(cond, button, rx.fragment())
         
         on_open_auto_focus = content_props.pop(
-            "on_open_auto_focus", lambda *a: [cls.set_search_phrase("")]
+            "on_open_auto_focus", lambda: [cls.set_search_phrase("")]
         )
         
         return rx.popover.root(
@@ -182,7 +191,10 @@ class Dynoselect(rx.ComponentState):
                     ),
                     chevron_down(),
                     class_name="rt-reset rt-SelectTrigger rt-variant-surface",
+                    style={"width": "100%", "font_size" : Size.MEDIUM.value},
                     **size_radius,
+                    border="0.5px solid",
+                    box_shadow = 'none'
                 ),
             ),
             rx.popover.content(
@@ -190,7 +202,9 @@ class Dynoselect(rx.ComponentState):
                     rx.input(
                         placeholder=(search_placeholder or ""),
                         on_change=cls.set_search_phrase,
-                        **size_radius
+                        **size_radius,
+                        font_family = Font.BODY.value,
+                        font_weight = FontWeight.LIGHT.value
                     ),
                     class_name=f"m-{padding}"
                 ),
@@ -210,18 +224,22 @@ class Dynoselect(rx.ComponentState):
                         ),
                         direction="column",
                         class_name=f"w-full pr-{padding}",
+                        style={"width": "100%"}
                     ),
                     scrollbars="vertical",
                     class_name=f"pl-{padding} mb-{padding}",
                     radius=radius,
                     height=height,
+                    style={"width": "100%"}
                 ),
                 overflow="hidden",
                 padding="0",
                 on_open_auto_focus=on_open_auto_focus,
                 **content_props,
+                style={"width": "100%"}
             ),
             **root_props,
+
         )
 
 def dynoselect(
@@ -229,7 +247,7 @@ def dynoselect(
         default_option: Dict[str, str] = None, 
         placeholder: str | None = None,
         search_placeholder: str | None = None,
-        size: LiteralTextFieldSize = "2",
+        size: LiteralTextFieldSize = "1",
         weight: LiteralTextWeight = "regular",
         radius: LiteralRadius | None = None,
         height: str = "10rem",
@@ -384,7 +402,7 @@ def dynotimezone(
         size: LiteralTextFieldSize = "2",
         weight: LiteralTextWeight = "regular",
         radius: LiteralRadius | None = None,
-        height: str = "20rem",
+        height: str = "10rem",
         padding: str = "2",
         indent: LiteralIndent = "6",
         align: str = "left",
@@ -452,7 +470,7 @@ def dynolanguage(
         size: LiteralTextFieldSize = "2",
         weight: LiteralTextWeight = "regular",
         radius: LiteralRadius | None = None,
-        height: str = "20rem",
+        height: str = "10rem",
         padding: str = "2",
         indent: LiteralIndent = "6",
         align: str = "left",
