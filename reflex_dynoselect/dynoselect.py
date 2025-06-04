@@ -5,8 +5,8 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from itertools import chain
 import reflex as rx
-from aplicacion.styles import Size
-from aplicacion.fonts import Font, FontWeight
+from leomasc.styles import Size
+from leomasc.fonts import Font, FontWeight
 from reflex.components.radix.themes.typography.base import LiteralTextWeight
 from reflex.components.radix.themes.base import LiteralRadius
 from reflex.components.radix.themes.components.text_field import LiteralTextFieldSize
